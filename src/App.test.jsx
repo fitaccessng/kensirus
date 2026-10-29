@@ -1,9 +1,10 @@
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 
 afterEach(() => {
+  vi.useRealTimers()
   vi.unstubAllGlobals()
   window.localStorage.removeItem('ken-sirius-language')
 })
@@ -18,9 +19,43 @@ describe('Ken Sirius public website', () => {
     )
 
     expect(screen.getByRole('heading', { name: /african commodities\. global markets/i })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /copper sheets being moved by forklift beside a cargo ship/i })).toBeInTheDocument()
 
     await user.click(screen.getByRole('link', { name: /products and services/i }))
     expect(screen.getByRole('heading', { name: /commodity supply enquiries for industrial and agricultural markets/i })).toBeInTheDocument()
+  })
+
+  it('switches hero slides with carousel controls', async () => {
+    const user = userEvent.setup()
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole('heading', { name: /african commodities\. global markets\./i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Next slide' }))
+    expect(screen.getByRole('heading', { name: /reliable supply from africa to global industries\./i })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Go to slide 3' }))
+    expect(screen.getByRole('heading', { name: /african resources\. global opportunities\./i })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: '3 of 3' })).toBeInTheDocument()
+  })
+
+  it('advances hero slides automatically', () => {
+    vi.useFakeTimers()
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    act(() => {
+      vi.advanceTimersByTime(6000)
+    })
+
+    expect(screen.getByRole('group', { name: '2 of 3' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /reliable supply from africa to global industries\./i })).toBeInTheDocument()
   })
 
   it('validates the request quote form', async () => {
@@ -35,6 +70,24 @@ describe('Ken Sirius public website', () => {
 
     expect(screen.getByText(/full name is required/i)).toBeInTheDocument()
     expect(screen.getByText(/business email is required/i)).toBeInTheDocument()
+  })
+
+  it('shows a visible admin sign-in button and explains when the API is unavailable', async () => {
+    const user = userEvent.setup()
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')))
+
+    render(
+      <MemoryRouter initialEntries={['/admin/login']}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    const signInButton = screen.getByRole('button', { name: 'Sign in' })
+    expect(signInButton).toBeVisible()
+    await user.type(screen.getByLabelText('Password'), 'test-password')
+    await user.click(signInButton)
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/cannot reach the admin server/i)
   })
 
   it('sends every quote form field in the backend request', async () => {
@@ -118,6 +171,22 @@ describe('Ken Sirius public website', () => {
     expect(screen.getByRole('heading', { name: 'Copper' })).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Lithium' })).not.toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'Cassava' })).not.toBeInTheDocument()
+  })
+
+  it.each([
+    ['lithium', 'Lithium-bearing mineral', 5],
+    ['copper', 'Copper-bearing ore', 5],
+    ['cassava', 'Harvested cassava roots', 5],
+  ])('shows more %s images on its product detail page', (slug, galleryImage, imageCount) => {
+    render(
+      <MemoryRouter initialEntries={[`/products/${slug}`]}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole('heading', { name: new RegExp(`${slug} in focus`, 'i') })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: galleryImage })).toBeInTheDocument()
+    expect(document.querySelectorAll('.ks-product-gallery-item')).toHaveLength(imageCount)
   })
 
   it('groups secondary routes under the desktop More menu', async () => {

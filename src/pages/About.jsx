@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import IndependentPageFrame from '../components/layout/IndependentPageFrame'
 import { useLanguage } from '../context/LanguageContext'
+import { commodityImages } from '../assets/commodityImages'
 
 const values = [
   ['Integrity', 'We communicate honestly and set clear expectations.'],
@@ -11,9 +12,9 @@ const values = [
 ]
 
 const commodities = [
-  { name: 'Lithium', category: 'Battery minerals', slug: 'lithium', image: 'https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=900&q=85' },
-  { name: 'Copper', category: 'Industrial metals', slug: 'copper', image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85' },
-  { name: 'Cassava', category: 'Agricultural commodities', slug: 'cassava', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=85' },
+  { name: 'Lithium', category: 'Battery minerals', slug: 'lithium', image: commodityImages.lithium.card },
+  { name: 'Copper', category: 'Industrial metals', slug: 'copper', image: commodityImages.copper.card },
+  { name: 'Cassava', category: 'Agricultural commodities', slug: 'cassava', image: commodityImages.cassava.card },
 ]
 
 export default function About() {

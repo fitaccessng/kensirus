@@ -2,6 +2,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Reveal from '../Reveal'
 import { useLanguage } from '../../../context/LanguageContext'
+import { commodityImages } from '../../../assets/commodityImages'
 
 const commodities = [
   {
@@ -9,7 +10,7 @@ const commodities = [
     category: 'Battery Minerals',
     slug: 'lithium',
     number: '1',
-    image: 'https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=1400&q=85',
+    image: commodityImages.lithium.card,
     description: 'For buyers seeking lithium materials for industrial and battery supply chains. Product form, grade, and availability are subject to confirmation.',
   },
   {
@@ -17,7 +18,7 @@ const commodities = [
     category: 'Industrial Metals',
     slug: 'copper',
     number: '2',
-    image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1100&q=85',
+    image: commodityImages.copper.card,
     description: "For buyers seeking copper for industrial and electrical applications. Product specifications and supply terms are discussed based on the buyer's requirements.",
   },
   {
@@ -25,7 +26,7 @@ const commodities = [
     category: 'Agricultural Commodities',
     slug: 'cassava',
     number: '3',
-    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1100&q=85',
+    image: commodityImages.cassava.card,
     description: 'For buyers seeking cassava and related products for food or industrial use. Product form, quality requirements, and availability must be confirmed.',
   },
 ]

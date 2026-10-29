@@ -1,8 +1,9 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Reveal from '../Reveal'
+import { commodityImages } from '../../../assets/commodityImages'
 
-const logisticsImage = 'https://images.unsplash.com/photo-1494412519320-aa613dfb7738?auto=format&fit=crop&w=2000&q=88'
+const logisticsImage = commodityImages.copper.operations
 
 import { useLanguage } from '../../../context/LanguageContext'
 export default function TradeBandSection() {

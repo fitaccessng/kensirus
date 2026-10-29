@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Menu, X, Globe, ChevronDown, ArrowRight } from 'lucide-react'
 import { languages } from '../../config/languages'
 import { useLanguage } from '../../context/LanguageContext'
+import BrandLogo from './BrandLogo'
 import './Header.css'
 
 const primaryNavItems = [
@@ -81,7 +82,7 @@ export default function Header() {
     <header className="ks-site-header sticky top-0 z-50 w-full border-b border-slate-100 bg-white shadow-sm">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-5 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="ks-header-brand" aria-label="Ken Sirius home">
-          <img src="/ken-sirius-header.png" alt="Ken-Sirius Inc." />
+          <BrandLogo />
         </Link>
 
         <nav ref={navRef} className="hidden items-center gap-5 lg:flex xl:gap-6" aria-label={copy.primaryNavigation} onKeyDown={(event) => { if (event.key === 'Escape') setMoreOpen(false) }}>

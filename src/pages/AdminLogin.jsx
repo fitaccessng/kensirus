@@ -5,7 +5,7 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 export default function AdminLogin() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ email: 'admin@ken-sirius.com', password: 'admin123' })
+  const [form, setForm] = useState({ email: 'admin@ken-sirius.com', password: '' })
   const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -35,32 +35,34 @@ export default function AdminLogin() {
       localStorage.setItem('ken_sirius_admin_token', data.access_token)
       navigate('/admin/dashboard')
     } catch (err) {
-      setError(err.message)
+      setError(err instanceof TypeError
+        ? `Cannot reach the admin server at ${API_BASE}. Check that it is running and allows this website in its CORS settings.`
+        : err.message)
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <div className="container page-wrap">
+    <div className="container page-wrap admin-login-page">
       <div className="section-intro">
         <span className="eyebrow">Admin access</span>
         <h1>Protected administration portal</h1>
       </div>
 
-      <form className="quote-form" onSubmit={handleSubmit} noValidate>
+      <form className="quote-form admin-login-form" onSubmit={handleSubmit}>
         <label>
           <span>Email</span>
-          <input name="email" type="email" value={form.email} onChange={handleChange} />
+          <input name="email" type="email" autoComplete="username" required value={form.email} onChange={handleChange} />
         </label>
         <label>
           <span>Password</span>
-          <input name="password" type="password" value={form.password} onChange={handleChange} />
+          <input name="password" type="password" autoComplete="current-password" required value={form.password} onChange={handleChange} />
         </label>
 
-        {error && <small>{error}</small>}
+        {error && <small className="admin-login-error" role="alert">{error}</small>}
 
-        <button type="submit" className="button primary" disabled={isSubmitting}>
+        <button type="submit" className="admin-login-submit" disabled={isSubmitting}>
           {isSubmitting ? 'Signing in...' : 'Sign in'}
         </button>
       </form>

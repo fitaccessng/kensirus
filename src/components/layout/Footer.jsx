@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../../context/LanguageContext'
+import BrandLogo from './BrandLogo'
 
 export default function Footer() {
   const { t } = useLanguage()
@@ -9,7 +10,7 @@ export default function Footer() {
       <div className="container footer-grid">
         <div>
           <Link to="/" className="ks-footer-brand" aria-label="Ken Sirius home">
-            <img src="/ken-sirius-footer.png" alt="Ken-Sirius Inc. Shining Bright in Africa's Economic Sky" />
+            <BrandLogo />
           </Link>
           <p>{t("Shining Bright in Africa's Economic Sky.")}</p>
         </div>

@@ -2,8 +2,9 @@ import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Reveal from '../Reveal'
 import { useLanguage } from '../../../context/LanguageContext'
+import { commodityImages } from '../../../assets/commodityImages'
 
-const industryImage = 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=88'
+const industryImage = commodityImages.cassava.processing
 
 export default function ValueAdditionSection() {
   const { t } = useLanguage()

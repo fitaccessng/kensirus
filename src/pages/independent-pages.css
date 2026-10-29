@@ -45,7 +45,7 @@
 .ks-about-hero .ks-inner-hero-copy > * { max-width:900px; }
 .ks-about-hero h1 { max-width:960px; font-size:clamp(3.5rem,6.7vw,6.5rem); }
 .ks-about-hero p { max-width:740px; font-size:1.04rem; }
-.ks-about-hero .ks-inner-hero-image { background-image:url('https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=1900&q=88'); background-position:center 45%; }
+.ks-about-hero .ks-inner-hero-image { background-image:url('../assets/lithium_01.jpg.jpeg'); background-position:center 45%; }
 .ks-about-overview-grid { display:grid; grid-template-columns:.75fr 1.25fr; gap:100px; }
 .ks-about-overview h2 { margin:0; color:var(--page-forest); font-size:clamp(2.5rem,4vw,4rem); }
 .ks-about-overview-copy { max-width:700px; }
@@ -79,7 +79,7 @@
 .ks-about-trade p { margin:0 0 24px; color:rgba(255,255,255,.73); }
 
 /* Products */
-.ks-products-hero .ks-inner-hero-image { background-image:url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1900&q=88'); background-position:center; }
+.ks-products-hero .ks-inner-hero-image { background-image:url('../assets/copper_04.jpg.jpeg'); background-position:center; }
 .ks-products-hero h1 { max-width:800px; }
 .ks-products-hero p { max-width:700px; }
 .ks-products-hero .ks-page-button { margin-top:25px; }
@@ -89,6 +89,16 @@
 .ks-product-detail-grid h2 { margin:0 0 15px; color:var(--page-forest); font-size:clamp(2.4rem,4vw,3.8rem); }
 .ks-product-detail-grid p { margin:0; }
 .ks-product-detail-grid .ks-product-considerations { margin:0; padding:22px; border:1px solid var(--page-line); background:#fff; }
+.ks-product-gallery-section { padding:85px 0 100px; background:#fff; }
+.ks-product-gallery-heading { display:flex; align-items:end; justify-content:space-between; gap:30px; margin-bottom:30px; }
+.ks-product-gallery-heading .ks-inner-eyebrow { margin-bottom:8px; }
+.ks-product-gallery-heading h2 { margin:0; color:var(--page-forest); font-size:clamp(2rem,4vw,3.2rem); }
+.ks-product-gallery { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:14px; }
+.ks-product-gallery-item { min-width:0; margin:0; background:var(--page-paper); }
+.ks-product-gallery-item img { display:block; width:100%; aspect-ratio:4/3; object-fit:cover; transition:transform .35s ease; }
+.ks-product-gallery-item { overflow:hidden; }
+.ks-product-gallery-item:hover img { transform:scale(1.035); }
+.ks-product-gallery-item figcaption { padding:12px 14px; color:var(--page-forest); font-size:.78rem; font-weight:600; }
 .ks-products-intro { padding-bottom:30px; background:var(--page-paper); }
 .ks-product-filters { display:flex; flex-wrap:wrap; gap:9px; margin-top:28px; }
 .ks-product-filters button { min-height:40px; padding:0 14px; border:1px solid var(--page-line); border-radius:2px; background:transparent; color:var(--page-forest); cursor:pointer; font:inherit; font-size:.75rem; font-weight:600; transition:background .2s ease,color .2s ease,border-color .2s ease; }
@@ -122,10 +132,10 @@
 .ks-doc-preview-grid { display:grid; grid-template-columns:.85fr 1.15fr; align-items:center; gap:80px; }
 .ks-doc-preview h2 { margin:0 0 16px; color:var(--page-forest); font-size:clamp(2.5rem,4vw,3.8rem); }
 .ks-doc-preview p { margin:0 0 22px; }
-.ks-doc-preview-image { min-height:390px; background:url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=85') center/cover; }
+.ks-doc-preview-image { min-height:390px; background:url('../assets/lithium_07.jpg.jpeg') center/cover; }
 
 /* How we trade */
-.ks-trade-hero .ks-inner-hero-image { background-image:url('https://images.unsplash.com/photo-1494412519320-aa613dfb7738?auto=format&fit=crop&w=1900&q=88'); }
+.ks-trade-hero .ks-inner-hero-image { background-image:url('../assets/copper_07.jpg.jpeg'); }
 .ks-trade-flow { padding:95px 0; background:var(--page-paper); }
 .ks-trade-steps { position:relative; display:grid; grid-template-columns:1fr 1fr; gap:0 70px; }
 .ks-trade-step { display:grid; grid-template-columns:65px 1fr; gap:20px; min-height:200px; padding:24px 0; border-top:1px solid var(--page-line); }
@@ -146,7 +156,7 @@
 .ks-trade-checklist ul { grid-template-columns:repeat(2,1fr); }
 
 /* Compliance */
-.ks-compliance-hero .ks-inner-hero-image { background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1900&q=88'); }
+.ks-compliance-hero .ks-inner-hero-image { background-image:url('../assets/lithium_07.jpg.jpeg'); }
 .ks-compliance-intro { padding:85px 0 55px; background:var(--page-paper); }
 .ks-compliance-intro-grid { display:grid; grid-template-columns:.7fr 1.3fr; gap:80px; }
 .ks-compliance-intro h2 { margin:0; color:var(--page-forest); font-size:clamp(2.4rem,4vw,4rem); }
@@ -166,7 +176,7 @@
 .ks-compliance-cta p { color:rgba(255,255,255,.72); }
 
 /* Industrialization */
-.ks-industry-hero .ks-inner-hero-image { background-image:url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1900&q=88'); background-position:center 44%; }
+.ks-industry-hero .ks-inner-hero-image { background-image:url('../assets/copper_05.jpg.jpeg'); background-position:center 44%; }
 .ks-industry-hero h1 { max-width:820px; }
 .ks-industry-challenge { padding:90px 0; background:var(--page-paper); }
 .ks-industry-challenge-grid { display:grid; grid-template-columns:.72fr 1.28fr; gap:80px; }
@@ -196,12 +206,12 @@
 .ks-preserved-copy p { margin:0 0 22px; font-size:.96rem; line-height:1.9; }
 .ks-industry-perspective { padding:85px 0; }
 .ks-industry-perspective-grid { display:grid; grid-template-columns:.8fr 1.2fr; gap:70px; align-items:center; }
-.ks-industry-perspective-image { min-height:420px; background:url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=85') center/cover; }
+.ks-industry-perspective-image { min-height:420px; background:url('../assets/copper_08.jpg.jpeg') center/cover; }
 .ks-industry-perspective h2 { margin:0 0 16px; color:var(--page-forest); font-size:clamp(2.2rem,4vw,3.5rem); }
 .ks-industry-perspective p { margin:0; }
 
 /* Contact */
-.ks-contact-hero .ks-inner-hero-image { background-image:url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1900&q=88'); }
+.ks-contact-hero .ks-inner-hero-image { background-image:url('../assets/copper_07.jpg.jpeg'); }
 .ks-contact-main { padding:85px 0 100px; background:var(--page-paper); }
 .ks-contact-grid { display:grid; grid-template-columns:.75fr 1.25fr; gap:60px; align-items:start; }
 .ks-contact-details { padding:8px 0; }
@@ -325,6 +335,7 @@
 @media(max-width:900px) {
   .ks-inner-wrap,
   .ks-about-hero .ks-inner-wrap { width:calc(100% - 64px); }
+  .ks-product-gallery { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .ks-inner-hero-copy > * { max-width:780px; }
   .ks-inner-hero h1 { max-width:820px; }
   .ks-trade-verification { padding-right:32px; padding-left:32px; }
@@ -333,6 +344,9 @@
 @media(max-width:620px) {
   .ks-inner-wrap,
   .ks-about-hero .ks-inner-wrap { width:calc(100% - 40px); }
+  .ks-product-gallery-heading { display:block; }
+  .ks-product-gallery { gap:10px; }
+  .ks-product-gallery-item figcaption { padding:10px; font-size:.72rem; }
   .ks-inner-hero-copy > * { max-width:100%; }
   .ks-inner-hero h1 { max-width:100%; }
   .ks-trade-verification { padding-right:20px; padding-left:20px; }

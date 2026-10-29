@@ -1,5 +1,6 @@
 import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import BrandLogo from '../../components/layout/BrandLogo'
 
 const commodityLinks = [
   { title: 'Lithium', to: '/products/lithium' },
@@ -26,7 +27,7 @@ export default function HomeFooter() {
       <div className="ks-container">
         <div className="ks-footer-main">
           <div className="ks-footer-brand">
-            <Link to="/" className="ks-home-footer-brand" aria-label="Ken Sirius home"><img src="/ken-sirius-footer.png" alt="Ken-Sirius Inc. Shining Bright in Africa's Economic Sky" /></Link>
+            <Link to="/" className="ks-home-footer-brand" aria-label="Ken Sirius home"><BrandLogo /></Link>
             <p>{t('Ken Sirius Nigeria Limited is a Nigerian company focused on lithium, copper, and cassava trade enquiries.')}</p>
             <span className="ks-footer-reg">{t('Registered in Nigeria · RC 7321954')}</span>
           </div>

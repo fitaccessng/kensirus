@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 140" role="img" aria-labelledby="title description">
+  <title id="title">Ken Sirius</title>
+  <desc id="description">Ken Sirius, Shining Bright in Africa's Economic Sky</desc>
+  <g fill="#f4f4f0" font-family="Arial, Helvetica, sans-serif">
+    <text x="20" y="79" font-size="55" font-weight="300" letter-spacing="-1.7">Ken Sirius</text>
+    <text x="27" y="111" fill="#c6d0ca" font-size="16" font-style="italic" font-weight="300" letter-spacing=".15">Shining Bright in Africa's Economic Sky</text>
+  </g>
+  <g fill="#b4d63b">
+    <path d="M365 18c5-7 12-9 19-4l8 5 10-5c8-4 14 0 19 7l4 6c4 6 11 8 18 5l11-3 15 3c5 1 7 6 8 12l1 7 8 6 9-2-8 9-5 12c-3 6-10 9-14 15l-7 11-2 12-8 9-9 16-10 5-9-3-7-13-7-16-3-14 5-11 12-15 9-11 10-11 11-10-9-7-8-4-10 1-13 9-10 9-14 13-9 9-18 17-11 4-9-5-8 1-9 5-10-1-8-8-7-10c-4-5-4-11-1-16l3-7c-1-8 3-14 9-18l3-8c2-7 8-11 15-10z"/>
+    <path d="M486 18l7 10 12 1-9 8 2 12-10-6-10 6 3-12-9-8 12-1z"/>
+  </g>
+  <path d="M347 88 429 25" fill="none" stroke="#082820" stroke-linecap="round" stroke-width="8"/>
+</svg>
