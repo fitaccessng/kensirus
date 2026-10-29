@@ -1,0 +1,19 @@
+.DS_Store
+
+# The frontend has its own Git repository and GitHub remote.
+/frontend/
+
+# Local Python environments, caches, and bytecode.
+/.venv/
+/backend/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local databases and credentials.
+*.db
+*.sqlite
+*.sqlite3
+/backend/.env
+/backend/.env.*
+!/backend/.env.example

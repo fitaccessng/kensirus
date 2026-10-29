@@ -1,0 +1,13 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "chat.tools.terminal.autoApprove": {
+        "/^/Users/macbookpro/\\.hivepods/bin/hivepod app deployments kensirius-web --limit 3$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^/Users/macbookpro/\\.hivepods/bin/hivepod app status kensirius-api$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
