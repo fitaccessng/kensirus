@@ -305,6 +305,7 @@ def get_current_admin_token(
     return token
 
 
+@app.get('/')
 @app.get('/health')
 def health_check():
     return {'status': 'ok'}

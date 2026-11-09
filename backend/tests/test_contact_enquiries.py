@@ -39,6 +39,13 @@ def client(test_db):
         app.dependency_overrides[get_db] = previous_override
 
 
+def test_root_health_check(client):
+    response = client.get('/')
+
+    assert response.status_code == 200
+    assert response.json() == {'status': 'ok'}
+
+
 def test_contact_enquiry_is_persisted(client, test_db):
     payload = {
         'full_name': 'Ada Okafor',
