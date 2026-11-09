@@ -1,10 +1,12 @@
+import hashlib
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from app.main import ADMIN_TOKENS, Base, ContactEnquiry, QuoteEnquiry, app, get_db, issue_admin_token
+from app.main import ADMIN_TOKENS, AdminUser, Base, ContactEnquiry, QuoteEnquiry, app, get_db, issue_admin_token
 
 
 @pytest.fixture
@@ -104,6 +106,71 @@ def test_admin_contact_enquiries_require_authentication(client):
     response = client.get('/api/admin/contact-enquiries')
 
     assert response.status_code == 401
+
+
+def test_admin_can_create_other_admin_accounts(client, test_db):
+    with test_db() as db:
+        db.add(AdminUser(
+            email='root@example.com',
+            password_hash=hashlib.sha256('legacy-password'.encode('utf-8')).hexdigest(),
+        ))
+        db.commit()
+
+    unauthenticated = client.post(
+        '/api/admin/users',
+        json={'email': 'new-admin@example.com', 'password': 'long-enough-password'},
+    )
+    assert unauthenticated.status_code == 401
+
+    login_response = client.post(
+        '/api/admin/login',
+        json={'email': 'ROOT@example.com', 'password': 'legacy-password'},
+    )
+    assert login_response.status_code == 200
+    token = login_response.json()['access_token']
+    new_admin_token = None
+
+    try:
+        auth_headers = {'Authorization': f'Bearer {token}'}
+        created = client.post(
+            '/api/admin/users',
+            headers=auth_headers,
+            json={'email': 'New-Admin@example.com', 'password': 'long-enough-password'},
+        )
+        assert created.status_code == 201
+        assert created.json() == {'email': 'new-admin@example.com'}
+
+        duplicate = client.post(
+            '/api/admin/users',
+            headers=auth_headers,
+            json={'email': 'NEW-ADMIN@example.com', 'password': 'long-enough-password'},
+        )
+        assert duplicate.status_code == 409
+
+        short_password = client.post(
+            '/api/admin/users',
+            headers=auth_headers,
+            json={'email': 'another-admin@example.com', 'password': 'short'},
+        )
+        assert short_password.status_code == 422
+
+        new_admin_login = client.post(
+            '/api/admin/login',
+            json={'email': 'new-admin@example.com', 'password': 'long-enough-password'},
+        )
+        assert new_admin_login.status_code == 200
+        new_admin_token = new_admin_login.json()['access_token']
+
+        with test_db() as db:
+            created_admin = db.query(AdminUser).filter_by(email='new-admin@example.com').one()
+            upgraded_admin = db.query(AdminUser).filter_by(email='root@example.com').one()
+        assert created_admin.password_hash.startswith('pbkdf2_sha256$')
+        assert created_admin.password_hash != 'long-enough-password'
+        assert upgraded_admin.password_hash.startswith('pbkdf2_sha256$')
+    finally:
+        ADMIN_TOKENS.discard(token)
+        if new_admin_token:
+            ADMIN_TOKENS.discard(new_admin_token)
 
 
 @pytest.mark.parametrize(

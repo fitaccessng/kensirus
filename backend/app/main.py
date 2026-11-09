@@ -1,4 +1,5 @@
 import hashlib
+import hmac
 import os
 import secrets
 import uuid
@@ -9,15 +10,17 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response, 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
-from sqlalchemy import Boolean, Column, DateTime, Integer, LargeBinary, String, create_engine
+from sqlalchemy import Boolean, Column, DateTime, Integer, LargeBinary, String, create_engine, func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 
 APP_ENV = os.getenv('APP_ENV', 'development').strip().lower()
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./ken_sirius.db')
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
+IS_PRODUCTION = APP_ENV in {'production', 'prod'}
 
-if APP_ENV in {'production', 'prod'}:
+if IS_PRODUCTION:
     if DATABASE_URL.startswith('sqlite:'):
         raise RuntimeError('DATABASE_URL must use a managed database in production.')
     if not ADMIN_PASSWORD:
@@ -179,6 +182,11 @@ class AdminLoginRequest(BaseModel):
     password: str
 
 
+class AdminCreateRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=12, max_length=128)
+
+
 class AdminLoginResponse(BaseModel):
     access_token: str
     token_type: str = 'bearer'
@@ -222,16 +230,48 @@ class ContactEnquiryRecord(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+def hash_password(password: str) -> str:
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 310_000)
+    return f'pbkdf2_sha256$310000${salt.hex()}${digest.hex()}'
+
+
+def verify_password(password: str, password_hash: str) -> bool:
+    if not password_hash.startswith('pbkdf2_sha256$'):
+        legacy_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        return hmac.compare_digest(password_hash, legacy_hash)
+
+    try:
+        algorithm, iterations, salt, digest = password_hash.split('$')
+        if algorithm != 'pbkdf2_sha256':
+            return False
+        calculated = hashlib.pbkdf2_hmac(
+            'sha256',
+            password.encode('utf-8'),
+            bytes.fromhex(salt),
+            int(iterations),
+        ).hex()
+    except (ValueError, TypeError):
+        return False
+
+    return hmac.compare_digest(calculated, digest)
+
+
 def create_default_admin():
     with SessionLocal() as db:
-        existing_admin = db.query(AdminUser).filter(AdminUser.email == DEFAULT_ADMIN_EMAIL).first()
+        existing_admin = db.query(AdminUser).filter(
+            func.lower(AdminUser.email) == DEFAULT_ADMIN_EMAIL.lower()
+        ).first()
         if existing_admin is None:
             db.add(
                 AdminUser(
                     email=DEFAULT_ADMIN_EMAIL,
-                    password_hash=hashlib.sha256(DEFAULT_ADMIN_PASSWORD.encode('utf-8')).hexdigest(),
+                    password_hash=hash_password(DEFAULT_ADMIN_PASSWORD),
                 )
             )
+            db.commit()
+        elif not IS_PRODUCTION:
+            existing_admin.password_hash = hash_password(DEFAULT_ADMIN_PASSWORD)
             db.commit()
 
 
@@ -244,10 +284,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-def hash_password(password: str) -> str:
-    return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
 
 def issue_admin_token() -> str:
@@ -276,11 +312,43 @@ def health_check():
 
 @app.post('/api/admin/login', response_model=AdminLoginResponse)
 def admin_login(payload: AdminLoginRequest, db: Session = Depends(get_db)):
-    admin = db.query(AdminUser).filter(AdminUser.email == payload.email).first()
-    if admin is None or admin.password_hash != hash_password(payload.password):
+    admin = db.query(AdminUser).filter(
+        func.lower(AdminUser.email) == str(payload.email).lower()
+    ).first()
+    if admin is None or not verify_password(payload.password, admin.password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid admin credentials.')
 
+    if not admin.password_hash.startswith('pbkdf2_sha256$'):
+        admin.password_hash = hash_password(payload.password)
+        db.commit()
+
     return {'access_token': issue_admin_token(), 'token_type': 'bearer'}
+
+
+@app.post('/api/admin/users', status_code=status.HTTP_201_CREATED)
+def create_admin_user(
+    payload: AdminCreateRequest,
+    _token: str = Depends(get_current_admin_token),
+    db: Session = Depends(get_db),
+):
+    email = str(payload.email).lower()
+    existing_admin = db.query(AdminUser).filter(
+        func.lower(AdminUser.email) == email
+    ).first()
+    if existing_admin is not None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail='An admin with this email already exists.')
+
+    db.add(AdminUser(email=email, password_hash=hash_password(payload.password)))
+    try:
+        db.commit()
+    except IntegrityError as error:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail='An admin with this email already exists.',
+        ) from error
+
+    return {'email': email}
 
 
 @app.get('/api/admin/enquiries', response_model=list[EnquiryRecord])

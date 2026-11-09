@@ -14,15 +14,17 @@ cd frontend
 npm install
 npm run dev
 ```
-Local development admin credentials (development only):
+Local development admin credentials (development only; the default admin is reset to these on backend startup):
 
 - Email: admin@ken-sirius.com
 - Password: admin123
 
 For production, set `APP_ENV=production`, `DATABASE_URL` to a managed PostgreSQL URL,
 `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `CORS_ALLOWED_ORIGINS` in the hosting provider's
-environment settings. Production startup rejects SQLite and a missing admin password.
-Do not commit production credentials.
+environment settings. Production startup rejects SQLite and a missing admin password. The production admin
+password is not overwritten when an admin already exists. Sign in to the admin dashboard
+and use **Create an admin account** to add another admin. New admin passwords must be at
+least 12 characters. Do not commit production credentials.
 ### Backend
 
 ```bash
