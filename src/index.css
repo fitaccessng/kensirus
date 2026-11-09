@@ -601,6 +601,31 @@ button, input, textarea { font: inherit; }
   box-shadow: 0 16px 38px rgba(11, 43, 38, 0.06);
 }
 
+.admin-user-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
+  gap: 2rem;
+  align-items: center;
+  margin: 0 0 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 16px 38px rgba(11, 43, 38, 0.06);
+}
+
+.admin-user-form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.admin-user-form label { gap: 0.45rem; }
+.admin-user-form input { width: 100%; padding: 0.6rem 0.8rem; }
+.admin-user-form button { justify-self: start; }
+.admin-user-message { margin: 0; font-size: 0.9rem; }
+.admin-user-message.error { color: #a3312c; }
+.admin-user-message.success { color: #376317; }
+
 .admin-logo-copy .eyebrow {
   margin-bottom: 0.65rem;
   color: #647d35;
@@ -823,7 +848,8 @@ button, input, textarea { font: inherit; }
   }
   .nav-wrap { min-height: 72px; }
   .quote-banner { align-items: flex-start; }
-  .admin-logo-card { grid-template-columns: 1fr; }
+  .admin-logo-card,
+  .admin-user-card { grid-template-columns: 1fr; }
   .admin-dashboard-header { flex-direction:column; }
   .admin-dashboard-actions { justify-content:flex-start; }
   .admin-enquiry-main { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }

@@ -7,6 +7,7 @@ afterEach(() => {
   vi.useRealTimers()
   vi.unstubAllGlobals()
   window.localStorage.removeItem('ken-sirius-language')
+  window.localStorage.removeItem('ken_sirius_admin_token')
 })
 
 describe('Ken Sirius public website', () => {
@@ -18,7 +19,7 @@ describe('Ken Sirius public website', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByRole('heading', { name: /african commodities\. global markets/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /african commodities\. global markets\./i })).toBeInTheDocument()
     expect(screen.getByRole('img', { name: /copper sheets being moved by forklift beside a cargo ship/i })).toBeInTheDocument()
 
     await user.click(screen.getByRole('link', { name: /products and services/i }))
@@ -88,6 +89,41 @@ describe('Ken Sirius public website', () => {
     await user.click(signInButton)
 
     expect(await screen.findByRole('alert')).toHaveTextContent(/cannot reach the admin server/i)
+  })
+
+  it('allows an authenticated admin to create another admin account', async () => {
+    const user = userEvent.setup()
+    const fetchMock = vi.fn().mockImplementation((url) => {
+      if (url.endsWith('/api/admin/users')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({ email: 'new-admin@example.com' }),
+        })
+      }
+      return Promise.resolve({ ok: true, json: async () => [] })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    window.localStorage.setItem('ken_sirius_admin_token', 'test-token')
+
+    render(
+      <MemoryRouter initialEntries={['/admin/dashboard']}>
+        <App />
+      </MemoryRouter>,
+    )
+
+    await user.type(await screen.findByLabelText('Email'), 'new-admin@example.com')
+    await user.type(screen.getByLabelText('Password'), 'long-enough-password')
+    await user.type(screen.getByLabelText('Confirm password'), 'long-enough-password')
+    await user.click(screen.getByRole('button', { name: 'Create admin' }))
+
+    expect(await screen.findByRole('status')).toHaveTextContent('Admin account new-admin@example.com created.')
+    expect(fetchMock).toHaveBeenCalledWith(
+      'http://localhost:8000/api/admin/users',
+      expect.objectContaining({
+        method: 'POST',
+        headers: expect.objectContaining({ Authorization: 'Bearer test-token' }),
+      }),
+    )
   })
 
   it('sends every quote form field in the backend request', async () => {

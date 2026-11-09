@@ -80,7 +80,7 @@ export default function Header() {
 
   return (
     <header className="ks-site-header sticky top-0 z-50 w-full border-b border-slate-100 bg-white shadow-sm">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-5 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-15 max-w-7xl items-center justify-between gap-5 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="ks-header-brand" aria-label="Ken Sirius home">
           <BrandLogo />
         </Link>

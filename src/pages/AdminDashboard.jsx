@@ -71,6 +71,10 @@ export default function AdminDashboard() {
   const [logoError, setLogoError] = useState('')
   const [logoSuccess, setLogoSuccess] = useState('')
   const [uploadingLogo, setUploadingLogo] = useState(false)
+  const [adminForm, setAdminForm] = useState({ email: '', password: '', confirmation: '' })
+  const [adminError, setAdminError] = useState('')
+  const [adminSuccess, setAdminSuccess] = useState('')
+  const [creatingAdmin, setCreatingAdmin] = useState(false)
   const logoInputRef = useRef(null)
   const logoPreviewUrlRef = useRef('')
 
@@ -204,6 +208,45 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleCreateAdmin = async (event) => {
+    event.preventDefault()
+    setAdminError('')
+    setAdminSuccess('')
+    if (adminForm.password !== adminForm.confirmation) {
+      setAdminError('The passwords do not match.')
+      return
+    }
+
+    const token = localStorage.getItem('ken_sirius_admin_token')
+    if (!token) {
+      setAdminError('Your admin session has expired. Sign in again to create admin accounts.')
+      return
+    }
+
+    setCreatingAdmin(true)
+    try {
+      const response = await fetch(`${API_BASE}/api/admin/users`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: adminForm.email, password: adminForm.password }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.detail || 'Unable to create the admin account.')
+
+      setAdminForm({ email: '', password: '', confirmation: '' })
+      setAdminSuccess(`Admin account ${data.email} created.`)
+    } catch (createError) {
+      setAdminError(createError instanceof TypeError
+        ? 'Could not reach the admin API. Check the API URL and CORS settings.'
+        : createError.message)
+    } finally {
+      setCreatingAdmin(false)
+    }
+  }
+
   const handleSignOut = () => {
     localStorage.removeItem('ken_sirius_admin_token')
     window.location.href = '/admin/login'
@@ -292,6 +335,55 @@ export default function AdminDashboard() {
           {logoError && <p className="admin-logo-message error" role="alert">{logoError}</p>}
           {logoSuccess && <p className="admin-logo-message success" role="status">{logoSuccess}</p>}
         </div>
+      </section>
+
+      <section className="admin-user-card" aria-labelledby="admin-user-heading">
+        <div className="admin-logo-copy">
+          <span className="eyebrow">Admin access</span>
+          <h2 id="admin-user-heading">Create an admin account</h2>
+          <p>New admins can sign in to this dashboard. Use a unique password with at least 12 characters.</p>
+        </div>
+        <form className="admin-user-form" onSubmit={handleCreateAdmin}>
+          <label>
+            <span>Email</span>
+            <input
+              type="email"
+              autoComplete="email"
+              required
+              value={adminForm.email}
+              onChange={(event) => setAdminForm((current) => ({ ...current, email: event.target.value }))}
+            />
+          </label>
+          <label>
+            <span>Password</span>
+            <input
+              type="password"
+              autoComplete="new-password"
+              minLength={12}
+              maxLength={128}
+              required
+              value={adminForm.password}
+              onChange={(event) => setAdminForm((current) => ({ ...current, password: event.target.value }))}
+            />
+          </label>
+          <label>
+            <span>Confirm password</span>
+            <input
+              type="password"
+              autoComplete="new-password"
+              minLength={12}
+              maxLength={128}
+              required
+              value={adminForm.confirmation}
+              onChange={(event) => setAdminForm((current) => ({ ...current, confirmation: event.target.value }))}
+            />
+          </label>
+          {adminError && <p className="admin-user-message error" role="alert">{adminError}</p>}
+          {adminSuccess && <p className="admin-user-message success" role="status">{adminSuccess}</p>}
+          <button type="submit" className="button primary" disabled={creatingAdmin}>
+            {creatingAdmin ? 'Creating admin…' : 'Create admin'}
+          </button>
+        </form>
       </section>
 
       <section className="admin-inbox" aria-labelledby="admin-inbox-heading">

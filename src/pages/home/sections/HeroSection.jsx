@@ -11,7 +11,7 @@ const slides = [
     eyebrow: 'African commodities. Global markets.',
     firstLine: 'African Commodities.',
     accent: 'Global Markets.',
-    description: 'Ken Sirius Inc sources and supplies high-quality lithium, copper, cassava and other strategic commodities from Africa to global industries.',
+    description: 'Ken Sirius sources and supplies high-quality lithium, copper, cassava and other strategic commodities from Africa to global industries.',
     image: heroCopperPort,
     imageAlt: 'Copper sheets being moved by forklift beside a cargo ship',
   },

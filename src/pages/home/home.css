@@ -161,7 +161,12 @@
 @keyframes ks-hero-image-arrive { from { opacity:.42; transform:scale(1.035); } to { opacity:.78; transform:scale(1); } }
 
 .ks-section { padding: 112px 0; }
-.ks-commodities { background: var(--ks-paper); }
+.ks-commodities {
+  background: linear-gradient(rgba(5,22,20,.76), rgba(5,22,20,.76)), url('/world-map-routes.png') center / cover no-repeat;
+}
+.ks-section-heading.ks-commodity-heading .ks-eyebrow-dark,
+.ks-section-heading.ks-commodity-heading h2,
+.ks-section-heading.ks-commodity-heading > p { color: #fff; }
 .ks-section-heading { display: flex; justify-content: space-between; align-items: end; gap: 50px; margin-bottom: 45px; }
 .ks-section-heading h2,
 .ks-process-heading h2,
